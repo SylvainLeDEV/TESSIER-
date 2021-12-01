@@ -131,3 +131,23 @@ exports.getAllSauce = (req, res, next) => {
         }
     );
 };
+
+exports.likeSauce = (req, res, next) => {
+    Sauce.findOne({_id: req.params.id})
+        .then((like) => {
+            if (req.body.like === 1) {
+                like.likes++;
+                console.log(like)
+            }
+            if (req.body.like === 0) {
+
+            }
+            if (req.body.like === -1) {
+
+            }
+            console.log(req.body.like)
+        })
+
+
+};
+
