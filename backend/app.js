@@ -23,6 +23,8 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json())
 
+const path = require('path');
+app.use('/images', express.static(path.join(__dirname,'images')));
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
