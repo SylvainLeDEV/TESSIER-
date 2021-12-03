@@ -141,43 +141,64 @@ exports.likeSauce = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
         .then((sauce) => {
             const likeDislikeUser = req.body.userId;
-            let likes = sauce.likes;
-            let dislikes = sauce.dislikes;
 
             const userLiked = sauce.usersLiked;
             const userDisliked = sauce.usersDisliked;
-            console.log(userLiked)
 
             if (req.body.like === 1) {
                 userLiked.push(likeDislikeUser)
                 sauce.likes = userLiked.length
             }
             if (req.body.like === 0) {
-                const userId = req.body.userId
-                let indexLike = null;
-                let indexDislike = null;
-                const findUserIdLiked = userLiked.find((userIdinUserLiked, i) => {
-                    if (userId === userIdinUserLiked) indexLike = i;
-                    return userId === userIdinUserLiked;
-                });
-                const findUserIdDisliked = userDisliked.find((userIdinUserdisLiked, i) => {
-                    if (userId === userIdinUserdisLiked) indexDislike = i;
-                    return userId === userIdinUserdisLiked;
-                })
-                console.log("find userId:", findUserIdDisliked)
-                if (findUserIdLiked) {
-                    userLiked.splice(indexLike, 1);
-                    sauce.likes = userLiked.length
+                //     const userId = req.body.userId
+                //     let indexLike;
+                //     let indexDislike;
+                //     const findUserIdLiked = userLiked.find((userIdinUserLiked, i) => {
+                //         if (userId === userIdinUserLiked) indexLike = i;
+                //         return userId === userIdinUserLiked;
+                //     });
+                //     const findUserIdDisliked = userDisliked.find((userIdinUserdisLiked, i) => {
+                //         if (userId === userIdinUserdisLiked) indexDislike = i;
+                //         return userId === userIdinUserdisLiked;
+                //     });
+                //     console.log("find userId:", findUserIdDisliked)
+                //     if (findUserIdLiked) {
+                //         userLiked.splice(indexLike, 1);
+                //         sauce.likes = userLiked.length
+                //     }
+                //     if (findUserIdDisliked) {
+                //         userDisliked.splice(indexDislike, 1);
+                //         sauce.dislikes = userDisliked.length
+                //     }
+                // }
+
+                if (userLiked.includes(req.body.userId)) {
+                    for (let i = 0; i < userLiked.length; i++) {
+                        if (userLiked[i] === req.body.userId) {
+                            userLiked.splice(i, 1)
+                        }
+                    }
                 }
-                if (findUserIdDisliked) {
-                    userDisliked.splice(indexDislike, 1);
-                    sauce.dislikes = userDisliked.length
+                if (userDisliked.includes(req.body.userId)) {
+                    for (let i = 0; i < userDisliked.length; i++) {
+                        if (userDisliked[i] === req.body.userId) {
+                            userDisliked.splice(i, 1)
+                        }
+                    }
                 }
             }
+            sauce.likes = userLiked.length
+            sauce.dislikes = userDisliked.length
+
             if (req.body.like === -1) {
                 userDisliked.push(likeDislikeUser);
                 sauce.dislikes = userDisliked.length
             }
+
+
+            console.log("UserId", likeDislikeUser)
+            console.log("userLike :", sauce.usersLiked)
+            console.log("userDislike :", userDisliked)
             sauce.save()
                 .then(() => res.status(200).json({message: "Like ou Dislike ajouté !"}))
                 .catch((error) => res.status(400).json({error}));
