@@ -11,8 +11,8 @@ const sauceShema = mongoose.Schema({
     description: { type: String, required: true },
     imageUrl: { type: String, required: true },
     userId: { type: String, required: true },
-    usersLiked: { type: String },
-    usersDisliked: { type: String },
+    usersLiked: [{ type: String }],
+    usersDisliked: [{ type: String }],
 
 });
 
