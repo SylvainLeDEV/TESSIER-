@@ -1,6 +1,7 @@
+// Un fichier de contrôleur exporte des méthodes qui sont ensuite attribuées
+// aux routes pour améliorer la maintenabilité de votre application.
 const Sauce = require('../models/sauces');
 const fs = require('fs');
-const {likeSauce} = require("./sauces");
 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
@@ -33,7 +34,7 @@ exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
         .then((sauce) => {
                 res.status(200).json(sauce);
-                console.log(sauce)
+                console.log("Sauce : ",sauce)
             }
         )
         .catch((error) => {
@@ -93,7 +94,7 @@ exports.modifySauce = (req, res, next) => {
 
                 Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id: req.params.id})
                     .then(() => {
-                        res.status(201).json({message: 'Sauce modifié !'})
+                        res.status(201).json({message: 'Sauce updated successfully !'})
                     })
                     .catch((error) => {
                         res.status(400).json({error: error})
@@ -144,12 +145,12 @@ exports.likeSauce = (req, res, next) => {
 
             const userLiked = sauce.usersLiked;
             const userDisliked = sauce.usersDisliked;
-
             if (req.body.like === 1) {
                 userLiked.push(likeDislikeUser)
                 sauce.likes = userLiked.length
             }
             if (req.body.like === 0) {
+
                 //     const userId = req.body.userId
                 //     let indexLike;
                 //     let indexDislike;
@@ -195,7 +196,7 @@ exports.likeSauce = (req, res, next) => {
                 sauce.dislikes = userDisliked.length
             }
 
-
+            console.log('like : ',req.body.like)
             console.log("UserId", likeDislikeUser)
             console.log("userLike :", sauce.usersLiked)
             console.log("userDislike :", userDisliked)

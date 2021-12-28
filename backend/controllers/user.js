@@ -20,7 +20,7 @@ exports.signup = (req, res, next) => {
 
 exports.login = (req, res, next) => {
 
-    User.findOne({ email: req.body.email })
+    User.findOne( { email: req.body.email })
         .then(user => {
             if (!user){
                 return res.status(401).json({ message: 'Utilisateur non trouvé ! ' })
@@ -29,6 +29,7 @@ exports.login = (req, res, next) => {
             bcrypt.compare(req.body.password, user.password )
                 .then(valid => {
                     if (!valid){
+                        console.log(user.password)
                         return res.status(401).json({ message: 'Mot de passe incorrect! ' })
                     }
                     res.status(200).json({

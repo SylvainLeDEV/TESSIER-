@@ -1,6 +1,7 @@
 const jsoonwebtoken = require('jsonwebtoken');
 const dotenv = require('dotenv').config({ encoding: "latin1" });
 
+// Un middleware est un bloc de code qui traite les requêtes et réponses de votre application.
 module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
