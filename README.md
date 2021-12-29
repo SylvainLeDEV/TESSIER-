@@ -23,7 +23,6 @@ For back and front :
 npm install
 npm start 
 ```
-* And then go to ```localhost:1234```
 
 
 
