@@ -106,12 +106,22 @@ exports.modifySauce = (req, res, next) => {
 exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
         .then((sauce) => {
+            if (!sauce) {
+                res.status(404).json({
+                    error : new Error('No such sauce')
+                })
+            }
+            if (sauce.userId !== req.auth.userId){
+               return res.status(400).json({
+                   message : 'Unauthorized request',
+               })
+            }
             const filename = sauce.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
                 Sauce.deleteOne({_id: req.params.id})
                     .then(() => {
                         res.status(200).json({
-                            message: 'Supprimer !'
+                            message: 'Delete !'
                         });
                     })
                     .catch((error) => {

@@ -29,11 +29,11 @@ exports.login = (req, res, next) => {
             bcrypt.compare(req.body.password, user.password )
                 .then(valid => {
                     if (!valid){
-                        console.log(user.password)
                         return res.status(401).json({ message: 'Mot de passe incorrect! ' })
                     }
                     res.status(200).json({
                         userId: user._id,
+                        // La méthode  sign()  du package  jsonwebtoken  utilise une clé secrète pour encoder un token qui peut contenir un payload personnalisé et avoir une validité limitée.
                         token: jsonwebtoken.sign(
                             {userId: user._id},
                             process.env.TOKEN_KEY,
