@@ -20,7 +20,7 @@ exports.signup = (req, res, next) => {
 
 exports.login = (req, res, next) => {
 
-    User.findOne({ email: req.body.email })
+    User.findOne( { email: req.body.email })
         .then(user => {
             if (!user){
                 return res.status(401).json({ message: 'Utilisateur non trouvé ! ' })
@@ -33,6 +33,7 @@ exports.login = (req, res, next) => {
                     }
                     res.status(200).json({
                         userId: user._id,
+                        // La méthode  sign()  du package  jsonwebtoken  utilise une clé secrète pour encoder un token qui peut contenir un payload personnalisé et avoir une validité limitée.
                         token: jsonwebtoken.sign(
                             {userId: user._id},
                             process.env.TOKEN_KEY,

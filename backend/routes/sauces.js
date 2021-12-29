@@ -1,4 +1,7 @@
 const express = require('express');
+
+// La méthodeexpress.Router()vous permet de créer des routeurs séparés pour chaque route principale de votre application
+//  vous y enregistrez ensuite les routes individuelles.
 const router = express.Router();
 
 const auth = require('../middleware/auth');

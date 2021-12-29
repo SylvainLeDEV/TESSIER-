@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
+// La méthode  Schema  de Mongoose vous permet de créer un schéma de données pour votre base de données MongoDB.
 const sauceShema = mongoose.Schema({
-
+    // _id : Automatiquement généré par Mongoose
     name: { type: String, required: true },
     manufacturer:{ type : String, required: true},
     mainPepper:{ type : String, required: true},
@@ -16,4 +17,5 @@ const sauceShema = mongoose.Schema({
 
 });
 
+// La méthode  model  transforme ce modèle en un modèle utilisable.
 module.exports = mongoose.model('Sauce', sauceShema);

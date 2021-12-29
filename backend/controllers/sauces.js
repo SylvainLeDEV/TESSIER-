@@ -1,6 +1,7 @@
+// Un fichier de contrôleur exporte des méthodes qui sont ensuite attribuées
+// aux routes pour améliorer la maintenabilité de votre application.
 const Sauce = require('../models/sauces');
 const fs = require('fs');
-const {likeSauce} = require("./sauces");
 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
@@ -33,7 +34,7 @@ exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
         .then((sauce) => {
                 res.status(200).json(sauce);
-                console.log(sauce)
+                console.log("Sauce : ",sauce)
             }
         )
         .catch((error) => {
@@ -93,7 +94,7 @@ exports.modifySauce = (req, res, next) => {
 
                 Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id: req.params.id})
                     .then(() => {
-                        res.status(201).json({message: 'Sauce modifié !'})
+                        res.status(201).json({message: 'Sauce updated successfully !'})
                     })
                     .catch((error) => {
                         res.status(400).json({error: error})
@@ -105,12 +106,22 @@ exports.modifySauce = (req, res, next) => {
 exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
         .then((sauce) => {
+            if (!sauce) {
+                res.status(404).json({
+                    error : new Error('No such sauce')
+                })
+            }
+            if (sauce.userId !== req.auth.userId){
+               return res.status(400).json({
+                   message : 'Unauthorized request',
+               })
+            }
             const filename = sauce.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
                 Sauce.deleteOne({_id: req.params.id})
                     .then(() => {
                         res.status(200).json({
-                            message: 'Supprimer !'
+                            message: 'Delete !'
                         });
                     })
                     .catch((error) => {
@@ -144,12 +155,12 @@ exports.likeSauce = (req, res, next) => {
 
             const userLiked = sauce.usersLiked;
             const userDisliked = sauce.usersDisliked;
-
             if (req.body.like === 1) {
                 userLiked.push(likeDislikeUser)
                 sauce.likes = userLiked.length
             }
             if (req.body.like === 0) {
+
                 //     const userId = req.body.userId
                 //     let indexLike;
                 //     let indexDislike;
@@ -195,7 +206,7 @@ exports.likeSauce = (req, res, next) => {
                 sauce.dislikes = userDisliked.length
             }
 
-
+            console.log('like : ',req.body.like)
             console.log("UserId", likeDislikeUser)
             console.log("userLike :", sauce.usersLiked)
             console.log("userDislike :", userDisliked)
