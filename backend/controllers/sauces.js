@@ -1,10 +1,13 @@
 // Un fichier de contrôleur exporte des méthodes qui sont ensuite attribuées
 // aux routes pour améliorer la maintenabilité de votre application.
 const Sauce = require('../models/sauces');
+// fs signifie « file system » de node
 const fs = require('fs');
 
 exports.createSauce = (req, res, next) => {
+    console.log(req.body.sauce)
     const sauceObject = JSON.parse(req.body.sauce);
+    console.log("sauce object parsé : ", sauceObject)
     delete sauceObject._id;
     const sauce = new Sauce({
         ...sauceObject,
@@ -34,7 +37,7 @@ exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
         .then((sauce) => {
                 res.status(200).json(sauce);
-                console.log("Sauce : ",sauce)
+                console.log("Sauce : ", sauce)
             }
         )
         .catch((error) => {
@@ -45,30 +48,29 @@ exports.getOneSauce = (req, res, next) => {
         );
 };
 
-// exports.modifySauce = (req, res, next) => {
-//     const filename = sauce.imageUrl.split('/images/')[1];
-//     fs.unlink(`images/${filename}`, () => {
-//
-//     });
-//     const sauceObject = req.file ?
-//         {
-//             ...JSON.parse(req.body.sauce),
-//             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-//         } : {...req.body}
-//     Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id: req.params.id})
-//         .then(() => {
-//                 res.status(201).json({
-//                     message: 'Sauce updated successfully!'
-//                 });
-//             }
-//         ).catch(
-//         (error) => {
-//             res.status(400).json({
-//                 error: error
-//             });
-//         }
-//     );
-// };
+exports.modifySauce = (req, res, next) => {
+    const filename = sauce.imageUrl.split('/images/')[1];
+    fs.unlink(`images/${filename}`, () => {
+    });
+    const sauceObject = req.file ?
+        {
+            ...JSON.parse(req.body.sauce),
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        } : {...req.body}
+    Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id: req.params.id})
+        .then(() => {
+                res.status(201).json({
+                    message: 'Sauce updated successfully!'
+                });
+            }
+        ).catch(
+        (error) => {
+            res.status(400).json({
+                error: error
+            });
+        }
+    );
+};
 
 exports.modifySauce = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
@@ -77,18 +79,19 @@ exports.modifySauce = (req, res, next) => {
 
             if (req.file) {
                 fs.unlink(`images/${filename}`, () => {
+                    const sauceObject = {
+                        ...JSON.parse(req.body.sauce),
+                        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                    }
+                    Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id: req.params.id})
+                        .then(() => {
+                            res.status(201).json({message: 'Sauce updated successfully!'})
+                        })
+                        .catch((error) => {
+                            res.status(400).json({error: error})
+                        });
                 });
-                const sauceObject = {
-                    ...JSON.parse(req.body.sauce),
-                    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-                }
-                Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id: req.params.id})
-                    .then(() => {
-                        res.status(201).json({message: 'Sauce updated successfully!'})
-                    })
-                    .catch((error) => {
-                        res.status(400).json({error: error})
-                    });
+
             } else {
                 const sauceObject = {...req.body}
 
@@ -108,13 +111,13 @@ exports.deleteSauce = (req, res, next) => {
         .then((sauce) => {
             if (!sauce) {
                 res.status(404).json({
-                    error : new Error('No such sauce')
+                    error: new Error('No such sauce')
                 })
             }
-            if (sauce.userId !== req.auth.userId){
-               return res.status(400).json({
-                   message : 'Unauthorized request',
-               })
+            if (sauce.userId !== req.auth.userId) {
+                return res.status(400).json({
+                    message: 'Unauthorized request',
+                })
             }
             const filename = sauce.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
@@ -205,11 +208,6 @@ exports.likeSauce = (req, res, next) => {
                 userDisliked.push(likeDislikeUser);
                 sauce.dislikes = userDisliked.length
             }
-
-            console.log('like : ',req.body.like)
-            console.log("UserId", likeDislikeUser)
-            console.log("userLike :", sauce.usersLiked)
-            console.log("userDislike :", userDisliked)
             sauce.save()
                 .then(() => res.status(200).json({message: "Like ou Dislike ajouté !"}))
                 .catch((error) => res.status(400).json({error}));
