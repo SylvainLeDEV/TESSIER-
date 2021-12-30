@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const rateLimite = require('express-rate-limit');
 require('dotenv').config({ encoding: "latin1" });
-const mongoMask = require('mongo-mask')
+const mongoMask = require('mongo-mask');
+const bodyParser = require("body-parser");
 
 const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/users');
@@ -33,12 +34,13 @@ app.use((req, res, next) => {
     next();
 });
 
-// Par exemple, Node.js a un module de cookies avec HttpOnly, et un middleware appelé Helmet.
+// Par exemple, Node.js a un module de cookies avec HttpOnly, et un middleware appelé Helmet. XSS
 app.use(helmet());
 
 // Avec ceci, Express prend toutes les requêtes qui ont comme Content-Type  application/json
-// et met à disposition leur  body  directement sur l'objet req
-app.use(express.json());
+// parse application/json, basically parse incoming Request Object as a JSON Object
+app.use(bodyParser.json());
+// or app.use(express.json());
 
 app.use(rateLimite({
     windowMs: 24 * 60 * 60 * 1000,
@@ -48,7 +50,6 @@ app.use(rateLimite({
 }));
 
 const path = require('path');
-
 // Router
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/sauces', sauceRoutes);
