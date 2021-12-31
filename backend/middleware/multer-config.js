@@ -9,7 +9,7 @@ const MIME_TYPES = {
 
 const limits = {
     fileSize : 5 * 1024 * 1024,
-    //5 242 880byte
+    //5 242 880byte/Octets = 5Mo
 };
 
 const types = Object.keys(MIME_TYPES)
