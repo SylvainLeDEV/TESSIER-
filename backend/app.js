@@ -1,10 +1,10 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const helmet = require('helmet');
 const rateLimite = require('express-rate-limit');
-require('dotenv').config({ encoding: "latin1" });
+require('dotenv').config({ path: './config/.env',encoding: "latin1" });
 const mongoMask = require('mongo-mask');
 const bodyParser = require("body-parser");
+require('./config/db');
 
 const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/users');
@@ -12,15 +12,6 @@ const userRoutes = require('./routes/users');
 
 // Pour créer une application Express, appelez simplement la méthode  express()
 const app = express();
-
-// Mongoose est un package qui facilite les interactions avec notre base de données MongoDB
-mongoose.connect(process.env.MONGOOSE_KEY,
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-    .then(() => console.log('Connexion à MongoDB réussie !'))
-    .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 
 //CORS Police : Cross Origin Resource Sharing
