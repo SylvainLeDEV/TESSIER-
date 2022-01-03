@@ -4,6 +4,7 @@ const Sauce = require('../models/sauces');
 // fs signifie « file system » de node
 const fs = require('fs');
 
+//CRUD (create, read, update, delete) (créer, lire, mettre à jour, supprimer)
 exports.createSauce = (req, res, next) => {
     console.log(req.body.sauce)
     const sauceObject = JSON.parse(req.body.sauce);
@@ -48,29 +49,29 @@ exports.getOneSauce = (req, res, next) => {
         );
 };
 
-exports.modifySauce = (req, res, next) => {
-    const filename = sauce.imageUrl.split('/images/')[1];
-    fs.unlink(`images/${filename}`, () => {
-    });
-    const sauceObject = req.file ?
-        {
-            ...JSON.parse(req.body.sauce),
-            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-        } : {...req.body}
-    Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id: req.params.id})
-        .then(() => {
-                res.status(201).json({
-                    message: 'Sauce updated successfully!'
-                });
-            }
-        ).catch(
-        (error) => {
-            res.status(400).json({
-                error: error
-            });
-        }
-    );
-};
+// exports.modifySauce = (req, res, next) => {
+//     const filename = sauce.imageUrl.split('/images/')[1];
+//     fs.unlink(`images/${filename}`, () => {
+//     });
+//     const sauceObject = req.file ?
+//         {
+//             ...JSON.parse(req.body.sauce),
+//             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+//         } : {...req.body}
+//     Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id: req.params.id})
+//         .then(() => {
+//                 res.status(201).json({
+//                     message: 'Sauce updated successfully!'
+//                 });
+//             }
+//         ).catch(
+//         (error) => {
+//             res.status(400).json({
+//                 error: error
+//             });
+//         }
+//     );
+// };
 
 exports.modifySauce = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
