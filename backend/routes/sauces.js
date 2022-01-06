@@ -8,7 +8,7 @@ const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 
 const sauceControllers = require('../controllers/sauces');
-
+//CRUD (create, read, update, delete) (créer, lire, mettre à jour, supprimer)
 router.post('/', auth, multer, sauceControllers.createSauce);
 router.get('/', auth,sauceControllers.getAllSauce);
 router.get('/:id', auth, sauceControllers.getOneSauce);

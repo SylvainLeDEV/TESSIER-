@@ -4,11 +4,11 @@ const Sauce = require('../models/sauces');
 // fs signifie « file system » de node
 const fs = require('fs');
 
-//CRUD (create, read, update, delete) (créer, lire, mettre à jour, supprimer)
+
 exports.createSauce = (req, res, next) => {
-    console.log(req.body.sauce)
+    // console.log(req.body.sauce)
     const sauceObject = JSON.parse(req.body.sauce);
-    console.log("sauce object parsé : ", sauceObject)
+    // console.log("sauce object parsé : ", sauceObject)
     delete sauceObject._id;
     const sauce = new Sauce({
         ...sauceObject,
@@ -110,6 +110,7 @@ exports.modifySauce = (req, res, next) => {
 exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
         .then((sauce) => {
+            console.log(sauce);
             if (!sauce) {
                 res.status(404).json({
                     error: new Error('No such sauce')
