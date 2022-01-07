@@ -49,7 +49,7 @@ app.use('/api/auth', userRoutes);
 module.exports = app;
 
 //Exemple de middleware
-// app.use(endpoint: URL visé par l'api '/api/sauces ', (req, res, next) => {
+// app.use(endpoint: URL visé par l'api '/api/sauces/.. ', (req, res, next) => {
 //     console.log(req.body);
 //     res.status(201).json({
 //         message: 'Objet créé !'

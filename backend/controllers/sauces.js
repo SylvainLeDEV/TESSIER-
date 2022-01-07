@@ -78,6 +78,12 @@ exports.modifySauce = (req, res, next) => {
         .then((sauce) => {
             const filename = sauce.imageUrl.split('/images/')[1];
 
+            if (sauce.userId !== req.auth.userId) {
+                return res.status(400).json({
+                    message: 'Unauthorized request',
+                })
+            }
+
             if (req.file) {
                 fs.unlink(`images/${filename}`, () => {
                     const sauceObject = {
@@ -116,6 +122,7 @@ exports.deleteSauce = (req, res, next) => {
                     error: new Error('No such sauce')
                 })
             }
+
             if (sauce.userId !== req.auth.userId) {
                 return res.status(400).json({
                     message: 'Unauthorized request',
